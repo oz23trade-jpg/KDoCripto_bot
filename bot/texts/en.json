@@ -1,0 +1,117 @@
+{
+  "texts": {
+    "welcome_new": "🚀 Welcome to K DoCripto!\n\nLearn about crypto, complete quizzes, earn points and tickets — and win big in our weekly lottery! 🎉\n\nChoose your language:",
+    "welcome_returning": "👋 Welcome back, {name}!\n\nReady to learn more and earn rewards? Let's go!",
+    "language_set": "✅ Language set to English!",
+    "main_menu": "🏠 Main Menu\n\nWhat would you like to do today?",
+    "profile": "👤 Your Profile\n\n🆔 ID: {id}\n👨‍💼 Name: {name}\n@{username}\n\n📊 Level: {level} (XP: {xp})\n⭐ Points: {points}\n🎟 Tickets: {tickets}\n👥 Referrals: {referrals_count}\n\nKeep earning!",
+    "learning_menu": "📚 Learning Center\n\nComplete lessons to earn points and level up!",
+    "earning_menu": "💰 Earning Opportunities\n\nDaily login, quizzes, referrals — more ways to earn points & tickets!",
+    "referral_menu": "👥 Invite Friends & Earn More!\n\nYour referral link:\n{ref_link}\n\n🔹 You get 10 points when they join\n🔹 +15 points when they complete first lesson\n🔹 10% of their earnings forever!\n\nSecond-level referrals: +3%",
+    "quiz_menu": "🧠 Daily Quiz\n\nAnswer questions correctly to earn points and lottery tickets!",
+    "quiz_completed_today": "✅ You've already completed today's quiz!\nCome back tomorrow for more rewards.",
+    "quiz_start": "🧠 Quiz: {title}\n\nYou need {passing}% to pass.\nReward: {reward} points + 1 ticket\n\nReady? Let's start!",
+    "quiz_question": "Question {current}/{total}:\n\n{question}\n\nChoose the correct answer:",
+    "quiz_correct": "✅ Correct! Well done!",
+    "quiz_wrong": "❌ Wrong. The correct answer was: {correct_option}",
+    "quiz_result_pass": "🎉 Congratulations! You passed the quiz!\nScore: {score}%\n\nRewards:\n⭐ +{points} points\n🎟 +1 lottery ticket",
+    "quiz_result_fail": "😔 You didn't pass this time (need {passing}%).\nYour score: {score}%\nTry again tomorrow!",
+    "lottery_menu": "🎰 Weekly Lottery\n\nCurrent draw: {draw_date}\nStatus: {status}\nYour tickets: {tickets}\n\nPrizes:\n{tickets_prizes}\n\nMore tickets = higher chance to win!",
+    "lottery_join_success": "🎟 You received 1 ticket! Good luck!",
+    "support_menu": "❤️ Support the Project\n\nHelp us grow and get extra tickets + exclusive badges!\n\nChoose a donation tier:",
+    "support_thanks": "❤️ Thank you so much for your support!\n\nYou've received:\n🎟 +{tickets} tickets\n🏅 Badge: {badge}\n\nYou're helping build the future of crypto education!",
+    "help": "❓ Help & Support\n\nHave questions? Contact @support_username\n\nRules • FAQ • Terms",
+    "admin_panel": "🔧 Admin Panel\n\nChoose action:",
+    "unknown_command": "❓ Unknown command. Use /menu to navigate."
+  },
+
+  "keyboards": {
+    "language_select": {
+      "inline": true,
+      "buttons": [
+        [{"text": "🇬🇧 English", "callback_data": "lang_en"}],
+        [{"text": "🇷🇺 Русский", "callback_data": "lang_ru"}],
+        [{"text": "🇫🇮 Suomi", "callback_data": "lang_fi"}]
+      ]
+    },
+
+    "main_menu": {
+      "inline": true,
+      "buttons": [
+        [{"text": "📚 Learning", "callback_data": "menu_learning"}],
+        [{"text": "💰 Earn More", "callback_data": "menu_earning"}],
+        [{"text": "👥 Referrals", "callback_data": "menu_referral"}],
+        [{"text": "🧠 Quiz", "callback_data": "menu_quiz"}],
+        [{"text": "🎰 Lottery", "callback_data": "menu_lottery"}],
+        [{"text": "❤️ Support", "callback_data": "menu_support"}],
+        [{"text": "👤 Profile", "callback_data": "profile"}, {"text": "❓ Help", "callback_data": "help"}]
+      ]
+    },
+
+    "learning_courses": {
+      "inline": true,
+      "buttons": [
+        [{"text": "📖 Crypto Basics (Course 1)", "callback_data": "start_course:1"}],
+        [{"text": "🔙 Back to Menu", "callback_data": "main_menu"}]
+      ]
+    },
+
+    "lesson_list": {
+      "inline": true,
+      "buttons": [
+        [{"text": "🔙 Back", "callback_data": "menu_learning"}]
+      ]
+    },
+
+    "lesson_complete": {
+      "inline": true,
+      "buttons": [
+        [{"text": "✅ Mark as Completed (+5 points)", "callback_data": "complete_lesson:{course}:{lesson}"}],
+        [{"text": "🔙 Back to Lessons", "callback_data": "menu_learning"}]
+      ]
+    },
+
+    "quiz_options": {
+      "inline": true,
+      "buttons": []
+    },
+
+    "referral_share": {
+      "inline": true,
+      "buttons": [
+        [{"text": "📤 Share Link", "switch_inline_query": ""}],
+        [{"text": "📋 Copy Link", "callback_data": "ref_copy"}],
+        [{"text": "🔙 Back", "callback_data": "menu_referral"}]
+      ]
+    },
+
+    "support_tiers": {
+      "inline": true,
+      "buttons": [
+        [{"text": "☕ Small (100 Stars) → 5 tickets", "callback_data": "support_buy:small"}],
+        [{"text": "🔥 Medium (500 Stars) → 30 tickets + badge", "callback_data": "support_buy:medium"}],
+        [{"text": "🚀 Large (1000 Stars) → 100 tickets + exclusive badge", "callback_data": "support_buy:large"}],
+        [{"text": "🔙 Back", "callback_data": "main_menu"}]
+      ]
+    },
+
+    "admin_panel": {
+      "inline": true,
+      "buttons": [
+        [{"text": "🔍 User Search", "callback_data": "admin_user_search"}],
+        [{"text": "👥 View Users (paginated)", "callback_data": "admin_users_page:1"}],
+        [{"text": "🎰 Run Lottery Draw", "callback_data": "admin_draw_confirm"}],
+        [{"text": "📊 Statistics", "callback_data": "admin_stats"}],
+        [{"text": "⚙️ Settings", "callback_data": "admin_settings"}],
+        [{"text": "📨 Broadcast", "callback_data": "admin_broadcast_start"}],
+        [{"text": "📚 Manage Lessons/Quizzes", "callback_data": "admin_content"}],
+        [{"text": "🔙 Back to Menu", "callback_data": "main_menu"}]
+      ]
+    },
+
+    "back_to_menu": {
+      "reply": true,
+      "buttons": [[{"text": "🏠 Main Menu"}]]
+    }
+  }
+}

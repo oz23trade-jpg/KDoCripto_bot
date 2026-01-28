@@ -1,0 +1,14 @@
+{
+  "welcome_new": "🚀 Tervetuloa K DoCriptoon!\n\nOpiskele kryptoa vaiheittain, ansaitse pisteitä 🎯 ja osallistu viikoittaisiin arvontoihin 🎰.\n\nValitse kieli:",
+  "welcome_back": "👋 Tervetuloa takaisin, {name}!\n\nValmis ansaitsemaan lisää?",
+  "language_set": "✅ Kieli vaihdettu: Suomi!",
+  "main_menu": "🏠 Päävalikko\n\nMitä haluat tehdä?",
+  "learning": "📚 Oppiminen\n\nAloita perusteista ja kehity.",
+  "earn": "💰 Ansaitse\n\nTehtävät, visat ja suosittelut.",
+  "quiz": "🧠 Visa\n\nTestaa tietosi ja ansaitse palkintoja.",
+  "lottery": "🎰 Arvonta\n\nEnemmän lippuja = paremmat mahdollisuudet.",
+  "referrals": "👥 Suosittelut\n\nKutsu ystäviä ja ansaitse yhdessä.",
+  "support": "❤️ Tue projektia\n\nTarjoa kahvi ☕ ja saa bonuksia!",
+  "profile": "👤 Profiili\n\nPisteet: {points}\nLiput: {tickets}\nSuosittelut: {referrals}",
+  "help": "❓ Apua\n\nTarvitsetko apua? Ota yhteyttä."
+}

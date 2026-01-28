@@ -1,0 +1,57 @@
+# render.yaml — Blueprint для деплоя K DoCripto на Render.com
+# Два сервиса: backend (FastAPI API) + bot (aiogram worker)
+
+services:
+
+  # 1. Backend — FastAPI API
+  - type: web
+    name: kdocripto-api
+    env: python
+    plan: free
+    branch: main
+    repo: https://github.com/ВАШ_ЮЗЕРНИМ/ВАШ_РЕПОЗИТОРИЙ.git   # ← замени на свой репо
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      PYTHON_VERSION: 3.11
+      # DATABASE_URL будет подставлен автоматически из базы ниже (если используешь Render Postgres)
+      # или добавь вручную из Supabase
+      ADMIN_IDS:
+        value: "123456789,987654321"   # ← твои Telegram ID админов
+
+  # 2. Telegram Bot — aiogram в режиме polling (Background Worker)
+  - type: worker
+    name: kdocripto-bot
+    env: python
+    plan: free
+    branch: main
+    repo: https://github.com/ВАШ_ЮЗЕРНИМ/ВАШ_РЕПОЗИТОРИЙ.git   # тот же репо
+    rootDir: bot
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      BOT_TOKEN:
+        sync: false   # ← обязательно ввести вручную при создании (секрет)
+      API_BASE_URL:
+        fromService:
+          name: kdocripto-api
+          type: web
+          property: url   # Render сам подставит https://kdocripto-api.onrender.com
+      ADMIN_IDS:
+        fromService:
+          name: kdocripto-api
+          envVarName: ADMIN_IDS
+
+# База данных — вариант A: PostgreSQL от Render (бесплатно 90 дней, потом ~$7/мес)
+databases:
+  - name: kdocripto-db
+    databaseName: kdocripto
+    user: kdocripto
+    plan: free
+    region: oregon   # или eu-west, в зависимости от твоего региона
+
+# База данных — вариант B: Supabase (рекомендую — бесплатно навсегда)
+# Если используешь Supabase — удали блок databases выше и добавь вручную в envVars backend:
+# DATABASE_URL = postgresql://postgres.[твой-ref]:пароль@db.[твой-ref].supabase.co:5432/postgres

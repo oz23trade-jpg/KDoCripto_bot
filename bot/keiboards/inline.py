@@ -56,9 +56,9 @@ def get_language_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
-def get_referral_menu_kb(user_id: int, bot_username: str) -> InlineKeyboardMarkup:
+def get_referral_menu_kb(user_id: int, KDoCripto_bot: str) -> InlineKeyboardMarkup:
     """Клавиатура реферального меню"""
-    ref_link = f"https://t.me/{bot_username}?start=ref_{user_id}"
+    ref_link = f"https://t.me/{KDoCripto_bot}?start=ref_{user_id}"
     
     kb = [
         [

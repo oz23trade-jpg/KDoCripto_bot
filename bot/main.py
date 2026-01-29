@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
 import os
 
-# Импорты роутеров
+# Импорты всех активных роутеров
 from handlers.start import router as start_router
 from handlers.language import router as lang_router
 from handlers.profile import router as profile_router
@@ -13,20 +13,20 @@ from handlers.menu import router as menu_router
 from handlers.referral import router as referral_router
 from handlers.learning import router as learning_router
 from handlers.quiz import router as quiz_router
+from handlers.support import router as support_router  # ← добавлен
 
 # Будущие роутеры (раскомментируй по мере добавления)
-# from handlers.support import router as support_router
 # from handlers.lottery import router as lottery_router
+
+# Настройка логирования (один раз на весь процесс)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN не найден в .env")
-
-# Настройка логирования (один раз на весь процесс)
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher()
@@ -39,9 +39,9 @@ dp.include_router(menu_router)       # основные меню
 dp.include_router(referral_router)   # рефералка
 dp.include_router(learning_router)   # уроки и курсы
 dp.include_router(quiz_router)       # квиз
+dp.include_router(support_router)    # поддержка и Stars
 
 # Добавляй новые по мере реализации
-# dp.include_router(support_router)
 # dp.include_router(lottery_router)
 
 async def on_startup():
@@ -59,7 +59,7 @@ async def main():
     await dp.start_polling(
         bot,
         allowed_updates=["message", "callback_query"],
-        drop_pending_updates=True  # опционально: игнорировать старые сообщения при запуске
+        drop_pending_updates=True  # игнорировать старые сообщения при запуске
     )
 
 

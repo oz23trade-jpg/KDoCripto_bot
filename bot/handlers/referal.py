@@ -7,12 +7,12 @@ from keyboards.inline import get_main_menu
 router = Router()
 
 # ← ОБЯЗАТЕЛЬНО замени на реальный username твоего бота (без @)
-BOT_USERNAME = "KDoCriptoBot"  # Пример: "MyCryptoLearnBot"
+BOT_USERNAME = "KDoCripto_bot"  
 
 
 def get_referral_kb(user_id: int) -> InlineKeyboardMarkup:
     """Клавиатура для реферального меню"""
-    ref_link = f"https://t.me/{BOT_USERNAME}?start=ref_{user_id}"
+    ref_link = f"https://t.me/{KDoCripto_bot}?start=ref_{user_id}"
     
     return InlineKeyboardMarkup(inline_keyboard=[
         [
@@ -37,7 +37,7 @@ def get_referral_kb(user_id: int) -> InlineKeyboardMarkup:
 async def show_referral_menu(cb: CallbackQuery):
     """Показывает реферальное меню с персональной ссылкой"""
     user_id = cb.from_user.id
-    ref_link = f"https://t.me/{BOT_USERNAME}?start=ref_{user_id}"
+    ref_link = f"https://t.me/{KDoCripto_bot}?start=ref_{user_id}"
     
     text = get_text("referral_menu", ref_link=ref_link)
     
@@ -52,12 +52,12 @@ async def show_referral_menu(cb: CallbackQuery):
 async def copy_referral_link(cb: CallbackQuery):
     """Показывает алерт с реферальной ссылкой для копирования"""
     user_id = cb.from_user.id
-    ref_link = f"https://t.me/{BOT_USERNAME}?start=ref_{user_id}"
+    ref_link = f"https://t.me/{KDoCripto_bot}?start=ref_{user_id}"
     
     await cb.answer(
         text=(
             f"📋 Твоя реферальная ссылка:\n\n"
-            f"{ref_link}\n\n"
+            f"{https://t.me/{KDoCripto_bot}?start=ref_{user_id}}\n\n"
             "Зажми текст и выбери «Скопировать»"
         ),
         show_alert=True

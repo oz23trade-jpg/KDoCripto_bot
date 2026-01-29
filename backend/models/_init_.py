@@ -1,31 +1,32 @@
 # backend/models/__init__.py
 """
 Экспорт всех моделей для удобного импорта:
-    from models import User, AdminActionLog, ...
+    from models import User, AdminActionLog, Lesson, ...
 """
 
-# Список всех моделей, которые уже созданы или будут созданы
+# Импортируем модели из отдельных файлов
 from .user import User
 from .admin_log import AdminActionLog
+from .lesson import Lesson, Course, UserLessonProgress
+from .quiz import Quiz, QuizAttempt
+from .referral import Referral
 
-# Добавляй сюда новые модели по мере создания файлов
-# from .lesson import Lesson, Course, UserLessonProgress
-# from .quiz import Quiz, QuizAttempt
+# Другие модели (добавляй по мере создания)
 # from .lottery import LotteryDraw, LotteryTicket
 # from .payment import Payment
-# from .referral import Referral
 
-# Опционально: список всех экспортируемых имён (для from models import *)
+# Список всех экспортируемых имён (для удобства: from models import *)
 __all__ = [
     "User",
     "AdminActionLog",
-    # Добавляй новые модели сюда, когда они появятся
-    # "Lesson", "Course", "UserLessonProgress",
-    # "Quiz", "QuizAttempt",
-    # "LotteryDraw", "LotteryTicket",
+    "Lesson",
+    "Course",
+    "UserLessonProgress",
+    "Quiz",
+    "QuizAttempt",
+    "Referral",
+    # Добавляй новые модели сюда
+    # "LotteryDraw",
+    # "LotteryTicket",
     # "Payment",
-    # "Referral",
-]from .lesson import Lesson, Course, UserLessonProgress
-from .quiz import Quiz, QuizAttempt
-
-__all__.extend(["Lesson", "Course", "UserLessonProgress", "Quiz", "QuizAttempt"])
+]

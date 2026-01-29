@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from typing import Optional
-
+import models  # ← это импортирует все модели через __init__.py
 import uvicorn
 
 from database import engine, get_session
@@ -122,4 +122,4 @@ if __name__ == "__main__":
         port=8000,
         reload=True,
         log_level="info"
-    )
+    

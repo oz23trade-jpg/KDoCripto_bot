@@ -1,34 +1,36 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, Query
-from sqlmodel import Session, select
+from sqlmodel import Session
 from typing import Optional
-import models  # ← это импортирует все модели через __init__.py
+
 import uvicorn
+import logging
 
 from database import engine, get_session
-import models  # ← Импорт всех моделей через models/__init__.py
+import models  # ← один импорт всех моделей через __init__.py
 from schemas import UserCreate, UserUpdate, UserOut
-from crud import get_user, create_user, update_user, increment_referrals
-# from models.referral import Referral  # раскомментируй, когда добавишь таблицу Referral
+from crud import get_user, create_user, update_user, increment_referrals, create_referral
 
-app = FastAPI(
-    title="K DoCripto Bot API",
-    description="Backend API для Telegram-бота K DoCripto",
-    version="0.1.0",
-    # lifespan=lifespan,  # ← включаем ниже
-)
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Инициализация базы данных при старте приложения"""
-    # Создаём все таблицы, если их ещё нет
+    logger.info("Инициализация базы данных...")
     models.SQLModel.metadata.create_all(engine)
     yield
-    # Здесь можно добавить cleanup, если нужно
+    logger.info("Остановка приложения...")
 
 
-app.router.lifespan_context = lifespan
+app = FastAPI(
+    title="K DoCripto Bot API",
+    description="Backend API для Telegram-бота K DoCripto",
+    version="0.1.0",
+    lifespan=lifespan  # ← правильное подключение
+)
 
 
 @app.get("/health")
@@ -50,10 +52,12 @@ async def start_user(
     Создаёт нового пользователя или обновляет существующего.
     Засчитывает реферала только один раз.
     """
+    logger.info(f"Start request: user={user_id}, referrer={referrer_id}")
+
     user = get_user(db, user_id)
 
     if user:
-        # Обновляем только если данные изменились
+        # Обновляем данные, если изменились
         update_data = UserUpdate(username=username, name=first_name)
         user = update_user(db, user_id, update_data)
     else:
@@ -62,20 +66,24 @@ async def start_user(
             id=user_id,
             username=username,
             name=first_name,
-            referrer_id=referrer_id if referrer_id != user_id else None  # защита от self-referral
+            referrer_id=referrer_id if referrer_id != user_id else None
         )
         user = create_user(db, user_data)
 
-        # Засчитываем реферала только если это новый пользователь и referrer существует
+        # Рефералка
         if referrer_id and referrer_id != user_id:
-            # Проверяем, не был ли уже засчитан этот реферал (если есть таблица Referral)
-            # Пока просто увеличиваем счётчик — позже добавим проверку
-            increment_referrals(db, referrer_id)
+            referrer = get_user(db, referrer_id)
+            if referrer:
+                increment_referrals(db, referrer_id)
+                create_referral(db, referrer_id, user_id)
+                logger.info(f"Referral recorded: {referrer_id} → {user_id}")
+            else:
+                logger.warning(f"Invalid referrer_id: {referrer_id}")
 
     return UserOut.from_orm(user)
 
 
-@app.post("/user/language", response_model=dict)
+@app.post("/user/language", response_model=UserOut)
 async def set_language(
     user_id: int,
     lang: str = Query(..., regex="^(en|ru|fi)$"),
@@ -87,12 +95,14 @@ async def set_language(
         raise HTTPException(status_code=404, detail="User not found")
 
     if user.lang == lang:
-        return {"status": "already_set", "lang": lang}
+        logger.info(f"Language already set for user {user_id}: {lang}")
+        return UserOut.from_orm(user)
 
     update_data = UserUpdate(lang=lang)
     updated_user = update_user(db, user_id, update_data)
+    logger.info(f"Language updated for user {user_id}: {lang}")
 
-    return {"status": "language_updated", "lang": updated_user.lang}
+    return UserOut.from_orm(updated_user)
 
 
 @app.get("/user/{user_id}", response_model=UserOut)
@@ -105,16 +115,6 @@ async def get_user_profile(user_id: int, db: Session = Depends(get_session)):
     return UserOut.from_orm(user)
 
 
-# Опционально: CORS (раскомментируй, если будет WebApp или внешние клиенты)
-# from fastapi.middleware.cors import CORSMiddleware
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # или конкретные домены
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
@@ -122,4 +122,4 @@ if __name__ == "__main__":
         port=8000,
         reload=True,
         log_level="info"
-    
+    )

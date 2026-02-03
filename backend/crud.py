@@ -5,7 +5,7 @@ CRUD-операции для модели User и Referral.
 """
 
 import logging
-from typing import Optional
+from typing import Optional, List
 
 from sqlmodel import Session, select
 
@@ -18,10 +18,7 @@ logger = logging.getLogger(__name__)
 # ── User ────────────────────────────────────────────────────────────────
 
 def get_user(session: Session, user_id: int) -> Optional[User]:
-    """
-    Получает пользователя по Telegram ID.
-    Возвращает None, если пользователя нет.
-    """
+    """Получает пользователя по Telegram ID."""
     user = session.get(User, user_id)
     if user:
         logger.debug(f"User {user_id} found")
@@ -31,10 +28,7 @@ def get_user(session: Session, user_id: int) -> Optional[User]:
 
 
 def create_user(session: Session, user_data: UserCreate) -> User:
-    """
-    Создаёт нового пользователя.
-    Автоматически устанавливает дефолтные значения.
-    """
+    """Создаёт нового пользователя."""
     try:
         user = User(**user_data.model_dump())
         session.add(user)
@@ -49,10 +43,7 @@ def create_user(session: Session, user_data: UserCreate) -> User:
 
 
 def update_user(session: Session, user_id: int, update_data: UserUpdate) -> Optional[User]:
-    """
-    Обновляет данные пользователя (только переданные поля).
-    Возвращает обновлённого пользователя или None, если не найден.
-    """
+    """Обновляет данные пользователя (только переданные поля)."""
     user = session.get(User, user_id)
     if not user:
         logger.warning(f"User {user_id} not found for update")
@@ -75,10 +66,7 @@ def update_user(session: Session, user_id: int, update_data: UserUpdate) -> Opti
 
 
 def increment_referrals(session: Session, referrer_id: int) -> bool:
-    """
-    Увеличивает счётчик referrals_count у реферера.
-    Возвращает True при успехе, False — если реферер не найден.
-    """
+    """Увеличивает счётчик referrals_count у реферера."""
     referrer = session.get(User, referrer_id)
     if not referrer:
         logger.warning(f"Referrer {referrer_id} not found, referral not counted")
@@ -100,11 +88,7 @@ def increment_referrals(session: Session, referrer_id: int) -> bool:
 # ── Referral ─────────────────────────────────────────────────────────────
 
 def create_referral(session: Session, referrer_id: int, referred_id: int) -> Referral:
-    """
-    Создаёт запись о реферале (только если её ещё нет).
-    Возвращает существующую или новую запись.
-    """
-    # Проверяем существование
+    """Создаёт запись о реферале (только если её ещё нет)."""
     existing = session.exec(
         select(Referral).where(
             Referral.referrer_id == referrer_id,
@@ -131,11 +115,13 @@ def create_referral(session: Session, referrer_id: int, referred_id: int) -> Ref
 
 
 def update_referral_first_lesson(session: Session, referred_id: int) -> bool:
-    """
-    Отмечает, что реферал завершил первый урок.
-    Начисляет +15 points каждому рефереру (если ещё не начислено).
-    Возвращает True, если было хотя бы одно обновление.
-    """
+    """Отмечает завершение первого урока реферала и начисляет +15 points рефереру."""
+    # Проверяем, существует ли реферал вообще
+    referred = get_user(session, referred_id)
+    if not referred:
+        logger.warning(f"Referred user {referred_id} not found")
+        return False
+
     referrals = session.exec(
         select(Referral).where(
             Referral.referred_id == referred_id,
@@ -153,7 +139,6 @@ def update_referral_first_lesson(session: Session, referred_id: int) -> bool:
         referral.first_lesson_completed = True
         session.add(referral)
 
-        # Начисляем +15 points рефереру
         referrer = get_user(session, referral.referrer_id)
         if referrer:
             referrer.points += 15
@@ -171,3 +156,14 @@ def update_referral_first_lesson(session: Session, referred_id: int) -> bool:
         session.rollback()
         logger.error(f"Error updating referral first lesson for {referred_id}: {e}")
         return False
+
+
+def get_referrals(session: Session, user_id: int) -> List[Referral]:
+    """
+    Возвращает список всех рефералов пользователя (для статистики в профиле).
+    """
+    referrals = session.exec(
+        select(Referral).where(Referral.referrer_id == user_id)
+    ).all()
+    logger.debug(f"Found {len(referrals)} referrals for user {user_id}")
+    return referrals

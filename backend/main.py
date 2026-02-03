@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware  # ← добавлен импорт
 from sqlmodel import Session
 from typing import Optional
 
@@ -7,7 +8,7 @@ import uvicorn
 import logging
 
 from database import engine, get_session
-import models  # ← один импорт всех моделей через __init__.py
+import models  # ← один импорт всех моделей
 from schemas import UserCreate, UserUpdate, UserOut
 from crud import get_user, create_user, update_user, increment_referrals, create_referral
 
@@ -29,7 +30,16 @@ app = FastAPI(
     title="K DoCripto Bot API",
     description="Backend API для Telegram-бота K DoCripto",
     version="0.1.0",
-    lifespan=lifespan  # ← правильное подключение
+    lifespan=lifespan
+)
+
+# Добавляем CORS middleware (для будущих WebApp / внешних клиентов)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # или конкретные: ["https://t.me", "https://web.telegram.org"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

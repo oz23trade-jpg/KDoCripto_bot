@@ -1,5 +1,9 @@
 # bot/keyboards/inline.py
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from typing import List
+
+# Глобальная константа — username бота (замени на реальный!)
+BOT_USERNAME = "KDoCripto_bot"  # ← ОБЯЗАТЕЛЬНО измени на свой @username из @BotFather
 
 # Константы callback_data (защита от опечаток)
 class CallbackData:
@@ -22,7 +26,7 @@ class CallbackData:
     SUPPORT_MEDIUM  = "support_buy:medium"
     SUPPORT_LARGE   = "support_buy:large"
 
-    # Для уроков и квизов (примеры)
+    # Для уроков и квизов
     START_COURSE    = "start_course:"
     OPEN_LESSON     = "open_lesson:"
     COMPLETE_LESSON = "complete_lesson:"
@@ -56,9 +60,9 @@ def get_language_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
-def get_referral_menu_kb(user_id: int, KDoCripto_bot: str) -> InlineKeyboardMarkup:
+def get_referral_menu_kb(user_id: int) -> InlineKeyboardMarkup:
     """Клавиатура реферального меню"""
-    ref_link = f"https://t.me/{KDoCripto_bot}?start=ref_{user_id}"
+    ref_link = f"https://t.me/{BOT_USERNAME}?start=ref_{user_id}"
     
     kb = [
         [
@@ -108,7 +112,7 @@ def get_lesson_complete_kb(course_id: int, lesson_id: int) -> InlineKeyboardMark
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
-def get_quiz_options_kb(quiz_id: int, question_idx: int, options: list[str]) -> InlineKeyboardMarkup:
+def get_quiz_options_kb(quiz_id: int, question_idx: int, options: List[str]) -> InlineKeyboardMarkup:
     """
     Динамическая клавиатура для вариантов ответа в квизе.
     Пример вызова: get_quiz_options_kb(1, 0, ["A. Bitcoin", "B. Ethereum", "C. Dogecoin"])
@@ -122,4 +126,9 @@ def get_quiz_options_kb(quiz_id: int, question_idx: int, options: list[str]) -> 
             )
         ])
     
-    return InlineKeyboardMarkup(inline_keyboard=kb)Markup(inline_keyboard=kb)
+    # Можно добавить кнопку "Отмена" или "Пропустить"
+    kb.append([
+        InlineKeyboardButton(text="❌ Отмена", callback_data=CallbackData.MAIN_MENU)
+    ])
+    
+    return InlineKeyboardMarkup(inline_keyboard=kb)

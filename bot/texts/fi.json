@@ -1,14 +1,26 @@
 {
-  "welcome_new": "🚀 Tervetuloa K DoCriptoon!\n\nOpiskele kryptoa vaiheittain, ansaitse pisteitä 🎯 ja osallistu viikoittaisiin arvontoihin 🎰.\n\nValitse kieli:",
-  "welcome_back": "👋 Tervetuloa takaisin, {name}!\n\nValmis ansaitsemaan lisää?",
-  "language_set": "✅ Kieli vaihdettu: Suomi!",
-  "main_menu": "🏠 Päävalikko\n\nMitä haluat tehdä?",
-  "learning": "📚 Oppiminen\n\nAloita perusteista ja kehity.",
-  "earn": "💰 Ansaitse\n\nTehtävät, visat ja suosittelut.",
-  "quiz": "🧠 Visa\n\nTestaa tietosi ja ansaitse palkintoja.",
-  "lottery": "🎰 Arvonta\n\nEnemmän lippuja = paremmat mahdollisuudet.",
-  "referrals": "👥 Suosittelut\n\nKutsu ystäviä ja ansaitse yhdessä.",
-  "support": "❤️ Tue projektia\n\nTarjoa kahvi ☕ ja saa bonuksia!",
-  "profile": "👤 Profiili\n\nPisteet: {points}\nLiput: {tickets}\nSuosittelut: {referrals}",
-  "help": "❓ Apua\n\nTarvitsetko apua? Ota yhteyttä."
+  "texts": {
+    "welcome_new": "🚀 Tervetuloa K DoCriptoon!\n\nOpiskele kryptoa vaiheittain, ansaitse pisteitä 🎯 ja osallistu viikoittaisiin arvontoihin 🎰.\n\nValitse kieli:",
+    "welcome_returning": "👋 Tervetuloa takaisin, {name}!\n\nValmis ansaitsemaan lisää?",
+    "language_set": "✅ Kieli vaihdettu suomeksi!",
+    "main_menu": "🏠 Päävalikko\n\nMitä haluat tehdä?",
+    "learning_menu": "📚 Oppimiskeskus\n\nSuorita oppitunteja ja nouse tasoilla!",
+    "earning_menu": "💰 Ansaintamahdollisuudet\n\nPäivittäiset sisäänkirjautumiset, visat, suosittelut — enemmän tapoja ansaita pisteitä ja lippuja!",
+    "referral_menu": "👥 Kutsu ystäviä ja ansaitse enemmän!\n\nSinun suosittelulinkkisi:\n{ref_link}\n\n🔹 Saat 10 pistettä, kun he liittyvät\n🔹 +15 pistettä, kun he suorittavat ensimmäisen oppitunnin\n🔹 10% heidän ansaitsemistaan ikuisesti!\n\nToisen tason suosittelut: +3%",
+    "quiz_menu": "🧠 Päivittäinen visa\n\nVastaa oikein ja ansaitse pisteitä sekä arvontalippuja!",
+    "quiz_completed_today": "✅ Olet jo suorittanut tämän päivän visan!\nTule huomenna uudelleen palkintojen perässä.",
+    "quiz_start": "🧠 Visa: {title}\n\nTarvitset {passing}% läpäistäksesi.\nPalkinto: {reward} pistettä + 1 lippu\n\nValmis? Aloitetaan!",
+    "quiz_question": "Kysymys {current}/{total}:\n\n{question}\n\nValitse oikea vastaus:",
+    "quiz_correct": "✅ Oikein! Hyvin tehty!",
+    "quiz_wrong": "❌ Väärin. Oikea vastaus oli: {correct_option}",
+    "quiz_result_pass": "🎉 Onnittelut! Läpäisit visan!\nPisteet: {score}%\n\nPalkinnot:\n⭐ +{points} pistettä\n🎟 +1 arvontalippu",
+    "quiz_result_fail": "😔 Et läpäissyt tällä kertaa (tarvitaan {passing}%).\nPisteet: {score}%\nKokeile huomenna uudelleen!",
+    "lottery_menu": "🎰 Viikoittaisen arvonta\n\nNykyinen arvonta: {draw_date}\nTila: {status}\nSinun lippusi: {tickets}\n\nPalkinnot:\n{tickets_prizes}\n\nEnemmän lippuja = suuremmat mahdollisuudet voittaa!",
+    "lottery_join_success": "🎟 Sait 1 lipun! Onnea!",
+    "support_menu": "❤️ Tue projektia\n\nAuta meitä kasvamaan ja saat ekstra lippuja + eksklusiivisia merkkejä!\n\nValitse tukitaso:",
+    "support_thanks": "❤️ Suuri kiitos tuestasi!\n\nSait:\n🎟 +{tickets} lippua\n🏅 Merkki: {badge}\n\nAutat rakentamaan krypton koulutuksen tulevaisuutta!",
+    "help": "❓ Apua ja tuki\n\nKysymyksiä? Ota yhteyttä @KDoCriptoSupport\n\nSäännöt • UKK • Ehdot",
+    "admin_panel": "🔧 Ylläpitopaneeli\n\nValitse toiminto:",
+    "unknown_command": "❓ Tuntematon komento. Käytä /menu navigointiin."
+  }
 }

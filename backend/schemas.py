@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 
 
@@ -61,7 +61,7 @@ class QuizAnswer(BaseModel):
 
 
 class QuizResult(BaseModel):
-    score: int          # процент правильных ответов
+    score: int = Field(..., ge=0, le=100, description="Процент правильных ответов")
     passed: bool
     awarded_points: int
     ticket_granted: bool

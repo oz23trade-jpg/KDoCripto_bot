@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, Query
-from fastapi.middleware.cors import CORSMiddleware  # ← добавлен импорт
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from typing import Optional
 
@@ -8,12 +8,15 @@ import uvicorn
 import logging
 
 from database import engine, get_session
-import models  # ← один импорт всех моделей
+import models  # ← один импорт всех моделей через __init__.py
 from schemas import UserCreate, UserUpdate, UserOut
 from crud import get_user, create_user, update_user, increment_referrals, create_referral
 
 # Настройка логирования
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -33,10 +36,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Добавляем CORS middleware (для будущих WebApp / внешних клиентов)
+# CORS для будущих WebApp / внешних клиентов
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # или конкретные: ["https://t.me", "https://web.telegram.org"]
+    allow_origins=["*"],  # В проде ограничь: ["https://t.me", "https://web.telegram.org"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -67,11 +70,9 @@ async def start_user(
     user = get_user(db, user_id)
 
     if user:
-        # Обновляем данные, если изменились
         update_data = UserUpdate(username=username, name=first_name)
         user = update_user(db, user_id, update_data)
     else:
-        # Новый пользователь
         user_data = UserCreate(
             id=user_id,
             username=username,
@@ -80,7 +81,6 @@ async def start_user(
         )
         user = create_user(db, user_data)
 
-        # Рефералка
         if referrer_id and referrer_id != user_id:
             referrer = get_user(db, referrer_id)
             if referrer:

@@ -4,7 +4,6 @@
     from models import User, AdminActionLog, Lesson, ...
 """
 
-# Импортируем модели из отдельных файлов
 from .user import User
 from .admin_log import AdminActionLog
 from .lesson import Lesson, Course, UserLessonProgress
@@ -15,16 +14,15 @@ from .referral import Referral
 # from .lottery import LotteryDraw, LotteryTicket
 # from .payment import Payment
 
-# Список всех экспортируемых имён (для удобства: from models import *)
 __all__ = [
-    "User",
     "AdminActionLog",
-    "Lesson",
     "Course",
-    "UserLessonProgress",
+    "Lesson",
     "Quiz",
     "QuizAttempt",
     "Referral",
+    "User",
+    "UserLessonProgress",
     # Добавляй новые модели сюда
     # "LotteryDraw",
     # "LotteryTicket",

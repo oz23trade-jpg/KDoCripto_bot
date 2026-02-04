@@ -15,15 +15,14 @@ services:
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
-      PYTHON_VERSION: 3.11
-      # DATABASE_URL будет подставлен автоматически из базы ниже (если используешь Render Postgres)
-      # или добавь вручную из Supabase
-      ADMIN_IDS:
-        value: "123456789,987654321"   # ← твои Telegram ID админов
+      PYTHON_VERSION: 3.12                      # или 3.11, Render выберет сам, если не указать
+      # DATABASE_URL — добавь вручную из Supabase или Render Postgres
+      # ADMIN_IDS:
+      #   sync: false                         # секрет, вводи вручную
 
-  # 2. Telegram Bot — aiogram в режиме polling (Background Worker)
+  # 2. Telegram Bot — aiogram polling (Background Worker)
   - type: worker
-    name: kdocripto_bot
+    name: kdocripto-bot                         # ← дефис для стиля
     env: python
     plan: free
     branch: main
@@ -33,25 +32,25 @@ services:
     startCommand: python main.py
     envVars:
       BOT_TOKEN:
-        sync: false   # ← обязательно ввести вручную при создании (секрет)
+        sync: false                             # секрет, вводи вручную
       API_BASE_URL:
         fromService:
           name: kdocripto-api
           type: web
-          property: url   # Render сам подставит https://kdocripto-api.onrender.com
-      ADMIN_IDS:
-        fromService:
-          name: kdocripto-api
-          envVarName: ADMIN_IDS
+          property: url                         # Render подставит https://kdocripto-api.onrender.com
+      # ADMIN_IDS:
+      #   fromService:
+      #     name: kdocripto-api
+      #     envVarName: ADMIN_IDS
 
 # База данных — вариант A: PostgreSQL от Render (бесплатно 90 дней, потом ~$7/мес)
-databases:
-  - name: kdocripto-db
-    databaseName: kdocripto
-    user: kdocripto
-    plan: free
-    region: oregon   # или eu-west, в зависимости от твоего региона
+# databases:
+#   - name: kdocripto-db
+#     databaseName: kdocripto
+#     user: kdocripto
+#     plan: free
+#     region: oregon                            # или frankfurt (EU Central)
 
-# База данных — вариант B: Supabase (рекомендую — бесплатно навсегда)
-# Если используешь Supabase — удали блок databases выше и добавь вручную в envVars backend:
+# Вариант B: Supabase (рекомендую — бесплатно навсегда)
+# Удали блок databases выше и добавь вручную в envVars backend:
 # DATABASE_URL = postgresql://postgres.[твой-ref]:пароль@db.[твой-ref].supabase.co:5432/postgres

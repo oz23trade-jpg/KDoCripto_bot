@@ -24,6 +24,9 @@ env/
 *.db
 *.sqlite3
 *.sqlite
+*.sql
+*.dump
+*.backup
 
 # IDE / редакторы
 .idea/
@@ -31,19 +34,26 @@ env/
 *.swp
 *.swo
 .DS_Store
+Thumbs.db
+desktop.ini
 
 # Logs и кэш
 *.log
 *.logs
 *.cache
 
-# Render / Docker (если используешь)
+# Render / Docker
 .render/
 Dockerfile
 docker-compose.yml
+docker-compose.override.yml
 
-# Дополнительно (если есть)
+# Дополнительно
 *.egg-info/
 dist/
 build/
 *.egg
+.coverage
+coverage.xml
+htmlcov/
+pytest.ini

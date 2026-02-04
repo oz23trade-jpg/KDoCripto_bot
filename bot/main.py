@@ -1,7 +1,7 @@
 # bot/main.py
 import asyncio
 import logging
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, __version__ as aiogram_version
 from dotenv import load_dotenv
 import os
 
@@ -13,20 +13,25 @@ from handlers.menu import router as menu_router
 from handlers.referral import router as referral_router
 from handlers.learning import router as learning_router
 from handlers.quiz import router as quiz_router
-from handlers.support import router as support_router  # ← добавлен
+from handlers.support import router as support_router
 
 # Будущие роутеры (раскомментируй по мере добавления)
 # from handlers.lottery import router as lottery_router
 
-# Настройка логирования (один раз на весь процесс)
-logging.basicConfig(level=logging.INFO)
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN не найден в .env")
+
+logger.info(f"Запуск бота | aiogram v{aiogram_version}")
 
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher()
@@ -56,10 +61,11 @@ async def on_shutdown():
 async def main():
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
+    
     await dp.start_polling(
         bot,
         allowed_updates=["message", "callback_query"],
-        drop_pending_updates=True  # игнорировать старые сообщения при запуске
+        drop_pending_updates=True
     )
 
 

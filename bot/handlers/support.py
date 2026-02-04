@@ -3,8 +3,18 @@ from aiogram import Router, F
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from texts import get_text
 from keyboards.inline import get_main_menu, get_support_tiers_kb
+import logging
 
 router = Router()
+
+logger = logging.getLogger(__name__)
+
+# Конфиг тиров (можно вынести в отдельный config.py позже)
+TIERS = {
+    "small": {"stars": 100, "tickets": 5, "badge": None, "name": "Маленькая поддержка ☕"},
+    "medium": {"stars": 500, "tickets": 30, "badge": "Supporter", "name": "Средняя поддержка 🔥"},
+    "large": {"stars": 1000, "tickets": 100, "badge": "Big Supporter", "name": "Большая поддержка 🚀"},
+}
 
 
 @router.callback_query(F.data == "menu_support")
@@ -13,6 +23,8 @@ async def show_support_menu(cb: CallbackQuery):
     Показывает меню поддержки проекта (покупка Stars).
     """
     text = get_text("support_menu")
+    if not text:
+        text = "Меню поддержки временно недоступно. Попробуй позже."
     
     await cb.message.edit_text(text, reply_markup=get_support_tiers_kb())
     await cb.answer()
@@ -21,35 +33,27 @@ async def show_support_menu(cb: CallbackQuery):
 @router.callback_query(F.data.startswith("support_buy:"))
 async def buy_support_tier(cb: CallbackQuery):
     """
-    Обработка покупки одного из тиров (small / medium / large).
-    Здесь начинается Telegram Stars payment flow.
+    Обработка выбора тира поддержки.
+    Показывает подтверждение покупки.
     """
-    tier = cb.data.split(":")[1]  # "support_buy:small" → "small"
+    tier = cb.data.split(":")[1]  # support_buy:small → small
     
-    # Маппинг тиров на суммы и награды (можно вынести в конфиг)
-    tiers = {
-        "small": {"stars": 100, "tickets": 5, "badge": None, "text": "Маленькая поддержка ☕"},
-        "medium": {"stars": 500, "tickets": 30, "badge": "Supporter", "text": "Средняя поддержка 🔥"},
-        "large": {"stars": 1000, "tickets": 100, "badge": "Big Supporter", "text": "Большая поддержка 🚀"},
-    }
-    
-    if tier not in tiers:
-        await cb.answer("Неверный тир поддержки", show_alert=True)
+    if tier not in TIERS:
+        logger.warning(f"Invalid support tier: {tier} from user {cb.from_user.id}")
+        await cb.answer("Неверный уровень поддержки", show_alert=True)
         return
     
-    config = tiers[tier]
+    config = TIERS[tier]
     
-    # Текст для подтверждения покупки
     text = (
-        f"{config['text']}\n\n"
+        f"{config['name']}\n\n"
         f"Стоимость: {config['stars']} Telegram Stars\n"
         f"Ты получишь:\n"
         f"🎟 +{config['tickets']} билетов в лотерею\n"
         f"{f'🏅 Бейдж: {config['badge']}' if config['badge'] else ''}\n\n"
-        "Подтверди покупку или вернись назад."
+        "Нажми «Подтвердить», чтобы продолжить."
     )
     
-    # Кнопки подтверждения (в будущем — вызов payment API)
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="✅ Подтвердить покупку", callback_data=f"confirm_buy:{tier}")],
         [InlineKeyboardButton(text="🔙 Назад", callback_data="menu_support")]
@@ -63,13 +67,31 @@ async def buy_support_tier(cb: CallbackQuery):
 async def confirm_buy(cb: CallbackQuery):
     """
     Подтверждение покупки Stars.
-    В реальном проекте здесь вызывается Telegram Payment API.
     Пока — имитация успешной оплаты.
+    В будущем здесь будет Telegram Payment API (sendInvoice).
     """
     tier = cb.data.split(":")[1]
     
-    # Имитация успешной оплаты (в будущем — реальный вызов sendInvoice / preCheckout)
-    text = get_text("support_thanks", tickets=5, badge="Supporter")  # подставь реальные значения
+    if tier not in TIERS:
+        await cb.answer("Ошибка обработки", show_alert=True)
+        return
+    
+    config = TIERS[tier]
+    
+    # Имитация успешной оплаты
+    text = get_text(
+        "support_thanks",
+        tickets=config["tickets"],
+        badge=config["badge"] or "Нет бейджа"
+    )
+    
+    if not text:
+        text = (
+            f"Спасибо за поддержку уровня {tier.upper()}!\n"
+            f"Ты получил {config['tickets']} билетов и {config['badge'] or 'ничего'} 🎉"
+        )
     
     await cb.message.edit_text(text, reply_markup=get_main_menu())
-    await cb.answer("Спасибо за поддержку! 🎉\nТы помог проекту расти!", show_alert=True)
+    await cb.answer(f"Спасибо за поддержку! 🎉\nУровень: {tier}", show_alert=True)
+    
+    logger.info(f"Imitated support payment: user={cb.from_user.id}, tier={tier}")

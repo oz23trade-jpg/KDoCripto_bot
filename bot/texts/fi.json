@@ -4,6 +4,7 @@
     "welcome_returning": "👋 Tervetuloa takaisin, {name}!\n\nValmis ansaitsemaan lisää?",
     "language_set": "✅ Kieli vaihdettu suomeksi!",
     "main_menu": "🏠 Päävalikko\n\nMitä haluat tehdä?",
+    "profile": "👤 Profiili\n\n🆔 ID: {id}\n👨‍💼 Nimi: {name}\n@{username}\n\n📊 Taso: {level} (XP: {xp})\n⭐ Pisteet: {points}\n🎟 Liput: {tickets}\n👥 Suosittelut: {referrals_count}\n\nJatka ansaitsemista!",
     "learning_menu": "📚 Oppimiskeskus\n\nSuorita oppitunteja ja nouse tasoilla!",
     "earning_menu": "💰 Ansaintamahdollisuudet\n\nPäivittäiset sisäänkirjautumiset, visat, suosittelut — enemmän tapoja ansaita pisteitä ja lippuja!",
     "referral_menu": "👥 Kutsu ystäviä ja ansaitse enemmän!\n\nSinun suosittelulinkkisi:\n{ref_link}\n\n🔹 Saat 10 pistettä, kun he liittyvät\n🔹 +15 pistettä, kun he suorittavat ensimmäisen oppitunnin\n🔹 10% heidän ansaitsemistaan ikuisesti!\n\nToisen tason suosittelut: +3%",
@@ -13,14 +14,104 @@
     "quiz_question": "Kysymys {current}/{total}:\n\n{question}\n\nValitse oikea vastaus:",
     "quiz_correct": "✅ Oikein! Hyvin tehty!",
     "quiz_wrong": "❌ Väärin. Oikea vastaus oli: {correct_option}",
-    "quiz_result_pass": "🎉 Onnittelut! Läpäisit visan!\nPisteet: {score}%\n\nPalkinnot:\n⭐ +{points} pistettä\n🎟 +1 arvontalippu",
-    "quiz_result_fail": "😔 Et läpäissyt tällä kertaa (tarvitaan {passing}%).\nPisteet: {score}%\nKokeile huomenna uudelleen!",
+    "quiz_result_pass": "🎉 Onnittelut! Läpäisit visan!\nTulos: {score}%\n\nPalkinnot:\n⭐ +{points} pistettä\n🎟 +1 arvontalippu",
+    "quiz_result_fail": "😔 Et läpäissyt tällä kertaa (tarvitaan {passing}%).\nTulos: {score}%\nKokeile huomenna uudelleen!",
     "lottery_menu": "🎰 Viikoittaisen arvonta\n\nNykyinen arvonta: {draw_date}\nTila: {status}\nSinun lippusi: {tickets}\n\nPalkinnot:\n{tickets_prizes}\n\nEnemmän lippuja = suuremmat mahdollisuudet voittaa!",
     "lottery_join_success": "🎟 Sait 1 lipun! Onnea!",
     "support_menu": "❤️ Tue projektia\n\nAuta meitä kasvamaan ja saat ekstra lippuja + eksklusiivisia merkkejä!\n\nValitse tukitaso:",
     "support_thanks": "❤️ Suuri kiitos tuestasi!\n\nSait:\n🎟 +{tickets} lippua\n🏅 Merkki: {badge}\n\nAutat rakentamaan krypton koulutuksen tulevaisuutta!",
-    "help": "❓ Apua ja tuki\n\nKysymyksiä? Ota yhteyttä @KDoCriptoSupport\n\nSäännöt • UKK • Ehdot",
+    "help": "❓ Apua ja tuki\n\nKysymyksiä? Ota yhteyttä @KDoCriptoSupport\n\nSäännöt • FAQ • Ehdot",
     "admin_panel": "🔧 Ylläpitopaneeli\n\nValitse toiminto:",
     "unknown_command": "❓ Tuntematon komento. Käytä /menu navigointiin."
+  },
+
+  "keyboards": {
+    "language_select": {
+      "inline": true,
+      "buttons": [
+        [{"text": "🇬🇧 English", "callback_data": "lang_en"}],
+        [{"text": "🇷🇺 Русский", "callback_data": "lang_ru"}],
+        [{"text": "🇫🇮 Suomi", "callback_data": "lang_fi"}]
+      ]
+    },
+
+    "main_menu": {
+      "inline": true,
+      "buttons": [
+        [{"text": "📚 Oppiminen", "callback_data": "menu_learning"}],
+        [{"text": "💰 Ansaitse", "callback_data": "menu_earning"}],
+        [{"text": "👥 Suosittelut", "callback_data": "menu_referral"}],
+        [{"text": "🧠 Visa", "callback_data": "menu_quiz"}],
+        [{"text": "🎰 Arvonta", "callback_data": "menu_lottery"}],
+        [{"text": "❤️ Tue", "callback_data": "menu_support"}],
+        [{"text": "👤 Profiili", "callback_data": "profile"}, {"text": "❓ Apua", "callback_data": "help"}]
+      ]
+    },
+
+    "learning_courses": {
+      "inline": true,
+      "buttons": [
+        [{"text": "📖 Kryptoperusteet (Kurssi 1)", "callback_data": "start_course:1"}],
+        [{"text": "🔙 Takaisin valikkoon", "callback_data": "main_menu"}]
+      ]
+    },
+
+    "lesson_list": {
+      "inline": true,
+      "buttons": [
+        [{"text": "🔙 Takaisin", "callback_data": "menu_learning"}]
+      ]
+    },
+
+    "lesson_complete": {
+      "inline": true,
+      "buttons": [
+        [{"text": "✅ Merkitse suoritetuksi (+5 pistettä)", "callback_data": "complete_lesson:{course}:{lesson}"}],
+        [{"text": "🔙 Takaisin oppitunneille", "callback_data": "menu_learning"}]
+      ]
+    },
+
+    "quiz_options": {
+      "inline": true,
+      "buttons": []
+    },
+
+    "referral_share": {
+      "inline": true,
+      "buttons": [
+        [{"text": "📤 Jaa linkki", "switch_inline_query": ""}],
+        [{"text": "📋 Kopioi linkki", "callback_data": "ref_copy"}],
+        [{"text": "🔙 Takaisin", "callback_data": "menu_referral"}]
+      ]
+    },
+
+    "support_tiers": {
+      "inline": true,
+      "buttons": [
+        [{"text": "☕ Pieni (100 Stars) → 5 lippua", "callback_data": "support_buy:small"}],
+        [{"text": "🔥 Keskisuuri (500 Stars) → 30 lippua + merkki", "callback_data": "support_buy:medium"}],
+        [{"text": "🚀 Suuri (1000 Stars) → 100 lippua + eksklusiivinen merkki", "callback_data": "support_buy:large"}],
+        [{"text": "🔙 Takaisin", "callback_data": "main_menu"}]
+      ]
+    },
+
+    "admin_panel": {
+      "inline": true,
+      "buttons": [
+        [{"text": "🔍 Käyttäjähaku", "callback_data": "admin_user_search"}],
+        [{"text": "👥 Näytä käyttäjät (sivutettu)", "callback_data": "admin_users_page:1"}],
+        [{"text": "🎰 Käynnistä arvonta", "callback_data": "admin_draw_confirm"}],
+        [{"text": "📊 Tilastot", "callback_data": "admin_stats"}],
+        [{"text": "⚙️ Asetukset", "callback_data": "admin_settings"}],
+        [{"text": "📨 Lähetä viesti kaikille", "callback_data": "admin_broadcast_start"}],
+        [{"text": "📚 Hallitse oppitunteja/visoja", "callback_data": "admin_content"}],
+        [{"text": "🔙 Takaisin valikkoon", "callback_data": "main_menu"}]
+      ]
+    },
+
+    "back_to_menu": {
+      "reply": true,
+      "buttons": [[{"text": "🏠 Päävalikko"}]]
+    }
   }
 }

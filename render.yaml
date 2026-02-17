@@ -43,13 +43,6 @@ services:
       #     name: kdocripto-api
       #     envVarName: ADMIN_IDS
 
-# База данных — вариант A: PostgreSQL от Render (бесплатно 90 дней, потом ~$7/мес)
-# databases:
-#   - name: kdocripto-db
-#     databaseName: kdocripto
-#     user: kdocripto
-#     plan: free
-#     region: oregon                            # или frankfurt (EU Central)
 
 # Вариант B: Supabase (рекомендую — бесплатно навсегда)
 # Удали блок databases выше и добавь вручную в envVars backend:

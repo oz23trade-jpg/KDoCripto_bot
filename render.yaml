@@ -15,7 +15,7 @@ services:
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
-      PYTHON_VERSION: 3.11                      # или 3.11, Render выберет сам, если не указать
+      PIP_ONLY_BINARY: ":all:"
       # DATABASE_URL — добавь вручную из Supabase или Render Postgres
       # ADMIN_IDS:
       #   sync: false                         # секрет, вводи вручную

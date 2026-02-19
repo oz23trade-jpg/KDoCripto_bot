@@ -1,23 +1,28 @@
-from pydantic import BaseModel, Field
-from typing import Optional, List, Dict
+# backend/schemas.py
+
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional, List, Dict, Literal
 
 
 # ==================== User schemas ====================
+
 class UserCreate(BaseModel):
     id: int
-    lang: str = "en"
+    lang: Literal["en", "ru", "fi"] = "en"
     username: Optional[str] = None
     name: Optional[str] = None
     referrer_id: Optional[int] = None
 
 
 class UserUpdate(BaseModel):
-    lang: Optional[str] = None
+    lang: Optional[Literal["en", "ru", "fi"]] = None
     username: Optional[str] = None
     name: Optional[str] = None
 
 
 class UserOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     lang: str
     username: Optional[str] = None
@@ -32,23 +37,21 @@ class UserOut(BaseModel):
 
 
 # ==================== Admin / Reward schemas ====================
-class LanguageUpdate(BaseModel):
-    lang: str  # en/ru/fi
-
 
 class PointsGrant(BaseModel):
     user_id: int
-    points: int
+    points: int = Field(..., ge=1)
     reason: str
 
 
 class TicketGrant(BaseModel):
     user_id: int
-    tickets: int = 1
-    source: str  # daily/quiz/referral/donate
+    tickets: int = Field(default=1, ge=1)
+    source: str
 
 
 # ==================== Learning & Quiz schemas ====================
+
 class LessonComplete(BaseModel):
     user_id: int
     lesson_id: int
@@ -61,7 +64,7 @@ class QuizAnswer(BaseModel):
 
 
 class QuizResult(BaseModel):
-    score: int = Field(..., ge=0, le=100, description="Процент правильных ответов")
+    score: int = Field(..., ge=0, le=100)
     passed: bool
     awarded_points: int
     ticket_granted: bool

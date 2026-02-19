@@ -1,16 +1,11 @@
-# backend/models/user.py
 from typing import Optional, List, Dict
 from datetime import datetime
 
 from sqlmodel import SQLModel, Field
-from sqlalchemy import JSON, Index
+from sqlalchemy import Column, JSON, Index
 
 
 class User(SQLModel, table=True):
-    """
-    Основная таблица пользователей (Telegram ID как PK).
-    Хранит прогресс, рефералы, баллы, билеты и настройки.
-    """
 
     __tablename__ = "users"
     __table_args__ = (
@@ -19,79 +14,36 @@ class User(SQLModel, table=True):
         Index("ix_user_username", "username"),
     )
 
-    id: int = Field(primary_key=True, description="Telegram ID пользователя")
+    id: int = Field(primary_key=True)
 
-    lang: str = Field(
-        default="en",
-        max_length=5,
-        description="Язык интерфейса: en / ru / fi"
-    )
+    lang: str = Field(default="en", max_length=5)
 
-    username: Optional[str] = Field(
-        default=None,
-        max_length=255,
-        index=True,
-        description="Telegram username (без @)"
-    )
+    username: Optional[str] = Field(default=None, max_length=255, index=True)
+    name: Optional[str] = Field(default=None, max_length=255)
 
-    name: Optional[str] = Field(
-        default=None,
-        max_length=255,
-        description="Имя/никнейм из Telegram"
-    )
+    joined_at: datetime = Field(default_factory=datetime.utcnow, index=True)
 
-    joined_at: datetime = Field(
-        default_factory=datetime.utcnow,
-        index=True,
-        description="Дата регистрации"
-    )
+    points: int = Field(default=0)
+    xp: int = Field(default=0)
+    level: int = Field(default=1)
 
-    points: int = Field(
-        default=0,
-        description="Общие баллы (points)"
-    )
+    referrer_id: Optional[int] = Field(default=None, foreign_key="users.id", index=True)
+    referrals_count: int = Field(default=0)
 
-    xp: int = Field(
-        default=0,
-        description="Опыт (XP) для уровня"
-    )
-
-    level: int = Field(
-        default=1,
-        description="Уровень пользователя"
-    )
-
-    referrer_id: Optional[int] = Field(
-        default=None,
-        foreign_key="users.id",
-        index=True,
-        description="Кто пригласил этого пользователя"
-    )
-
-    referrals_count: int = Field(
-        default=0,
-        description="Количество прямых рефералов"
-    )
-
-    tickets: int = Field(
-        default=0,
-        description="Билеты в лотерею"
-    )
+    tickets: int = Field(default=0)
 
     badges: List[Dict] = Field(
         default_factory=list,
-        sa_column=JSON,
-        description="Список бейджей: [{'name': 'Supporter', 'earned_at': '...'}, ...]"
+        sa_column=Column(JSON, nullable=False)
     )
 
     settings: Dict = Field(
         default_factory=dict,
-        sa_column=JSON,
-        description="Настройки пользователя в JSON"
+        sa_column=Column(JSON, nullable=False)
     )
 
-    class Config:
-        arbitrary_types_allowed = True
+    def recalculate_level(self):
+        self.level = self.xp // 100 + 1
 
     def __repr__(self) -> str:
-        return f"<User id={self.id} username=@{self.username} level={self.level} points={self.points}>"
+        return f"<User {self.id} lvl={self.level} pts={self.points}>"

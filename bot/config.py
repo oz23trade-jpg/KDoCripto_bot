@@ -1,35 +1,46 @@
-# bot/config.py (или в bot/main.py)
+# bot/config.py
+
 import logging
-from dotenv import load_dotenv
 import os
 from typing import Set
+from dotenv import load_dotenv
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# ── Обязательные переменные ────────────────────────────────────────────────
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-if not BOT_TOKEN:
-    logger.critical("BOT_TOKEN не найден в .env или переменных окружения!")
-    raise ValueError("BOT_TOKEN обязателен. Укажи его в .env")
 
-# ── Опциональные переменные ────────────────────────────────────────────────
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
-logger.info(f"API_BASE_URL: {API_BASE_URL}")
+class Settings:
+    # ── Обязательные ─────────────────────────────
+    BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
 
-# ── ADMIN_IDS ──────────────────────────────────────────────────────────────
-ADMIN_IDS_STR = os.getenv("ADMIN_IDS", "").strip()
-ADMIN_IDS: Set[int] = set()
+    if not BOT_TOKEN:
+        logger.critical("BOT_TOKEN не найден в .env или переменных окружения!")
+        raise ValueError("BOT_TOKEN обязателен")
 
-if ADMIN_IDS_STR:
-    try:
-        ADMIN_IDS = set(int(x.strip()) for x in ADMIN_IDS_STR.split(",") if x.strip())
-        logger.info(f"Загружены ADMIN_IDS: {ADMIN_IDS}")
-    except ValueError as e:
-        logger.error(f"Ошибка парсинга ADMIN_IDS: {e}. Используется пустой набор.")
-else:
-    logger.warning("ADMIN_IDS не задан в .env — админ-функции будут недоступны")
+    # ── Опциональные ─────────────────────────────
+    API_BASE_URL: str = os.getenv("API_BASE_URL", "http://localhost:8000")
 
-# ── Дополнительные настройки (пример) ──────────────────────────────────────
-# DEBUG = os.getenv("DEBUG", "false").lower() == "true"
+    DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
+
+    # ── ADMIN_IDS ────────────────────────────────
+    ADMIN_IDS: Set[int] = set()
+
+    admin_ids_raw = os.getenv("ADMIN_IDS", "").strip()
+    if admin_ids_raw:
+        try:
+            ADMIN_IDS = {
+                int(x.strip()) for x in admin_ids_raw.split(",") if x.strip()
+            }
+        except ValueError as e:
+            logger.error(f"Ошибка парсинга ADMIN_IDS: {e}")
+
+    # ── Дополнительно ────────────────────────────
+    DROP_PENDING_UPDATES: bool = True
+
+
+settings = Settings()
+
+logger.info(f"API_BASE_URL: {settings.API_BASE_URL}")
+logger.info(f"DEBUG: {settings.DEBUG}")
+logger.info(f"ADMIN_IDS: {settings.ADMIN_IDS}")

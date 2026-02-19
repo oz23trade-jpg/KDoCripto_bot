@@ -1,44 +1,36 @@
 # backend/models/__init__.py
-"""
-Экспорт всех SQLModel-моделей проекта для удобного импорта в одном месте.
 
-Пример использования:
-    from models import User, Referral, Quiz
+from sqlmodel import SQLModel
 
-Все новые модели добавляй сюда после создания файла модели.
-"""
-
-# ── Основные модели ────────────────────────────────────────────────────────
+# ── Основные модели ─────────────────
 from .user import User
 from .admin_log import AdminActionLog
 from .referral import Referral
 
-# ── Обучение и квизы ───────────────────────────────────────────────────────
-from .lesson import Lesson, Course, UserLessonProgress
+# ── Обучение ─────────────────
+from .lesson import Course, Lesson, UserLessonProgress
+
+# ── Квизы ─────────────────
 from .quiz import Quiz, QuizAttempt
 
-# ── Лотерея и платежи (раскомментируй при создании) ────────────────────────
-# from .lottery import LotteryDraw, LotteryTicket
-# from .payment import Payment
+# ── Лотерея ─────────────────
+from .lottery import LotteryDraw, LotteryTicket
 
-# ── Экспортируемые имена (для from models import *) ────────────────────────
+# ── Платежи ─────────────────
+from .payment import Payment
+
+
 __all__ = [
-    # Пользователи и админ
+    "SQLModel",
     "User",
     "AdminActionLog",
     "Referral",
-    
-    # Обучение
     "Course",
     "Lesson",
     "UserLessonProgress",
-    
-    # Квизы
     "Quiz",
     "QuizAttempt",
-    
-    # Будущие модели (добавляй сюда по мере создания)
-    # "LotteryDraw",
-    # "LotteryTicket",
-    # "Payment",
+    "LotteryDraw",
+    "LotteryTicket",
+    "Payment",
 ]
